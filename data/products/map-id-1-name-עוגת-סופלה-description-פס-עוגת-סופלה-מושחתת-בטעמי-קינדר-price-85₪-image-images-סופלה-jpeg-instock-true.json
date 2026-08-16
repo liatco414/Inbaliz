@@ -1,0 +1,8 @@
+{
+  "id": 1,
+  "name": "עוגת סופלה",
+  "description": "פס עוגת סופלה מושחתת בטעמי קינדר",
+  "price": "85₪",
+  "image": "/images/סופלה.jpeg",
+  "inStock": true
+}
