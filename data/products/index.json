@@ -1,60 +1,66 @@
 {
-    "bakery_items": [
-        {
-            "id": 1,
-            "name": "עוגת סופלה",
-            "description": "עוגת פס מושחתת בטעמי קינדר",
-            "price": "85₪",
-            "image": "./images/סופלה.jpeg",
-            "inStock": true
-        },
-        {
-            "id": 2,
-            "name": "עוגת גבינה",
-            "description": "קרמית במיוחד עם קרם, שמנת חמוצה, קצפת וניל ופירות העונה",
-            "price": "95₪",
-            "image": "./images/גבינה.jpeg",
-            "inStock": true
-        },
-        {
-            "id": 3,
-            "name": "סינבון קינמון",
-            "description": "רך במיוחד 4 יחידות",
-            "price": "75₪",
-            "image": "./images/סינבון.jpeg",
-            "inStock": true
-        },
-        {
-            "id": 4,
-            "name": "עוגיות שוקולד צ'יפס קריספיות",
-            "description": "6 יחידות",
-            "price": "60₪",
-            "image": "./images/עוגיות.jpeg",
-            "inStock": true
-        },
-        {
-            "id": 5,
-            "name": "אלפחורס",
-            "description": "לא מתפוררות אף פעם - 13 יחידות בקופסא",
-            "price": "70₪ ",
-            "image": "./images/אלפחורס.jpeg",
-            "inStock": true
-        },
-        {
-            "id": 6,
-            "name": "מארז פחזניות קראמבל",
-            "description": "במילוי קרם וניל - 9 יחידות",
-            "price": "90₪",
-            "image": "./images/פחזניות.jpeg",
-            "inStock": true
-        },
-        {
-            "id": 7,
-            "name": "מגולגלות נוטלה וקינדר",
-            "description": "12 יחידות",
-            "price": "70₪",
-            "image": "./images/מגולגלות.jpeg",
-            "inStock": true
-        }
-    ]
+  "bakery_items": [
+    {
+      "id": 1,
+      "name": "עוגת סופלה",
+      "description": "עוגת פס מושחתת בטעמי קינדר",
+      "price": "85₪",
+      "image": "./images/סופלה.jpeg",
+      "inStock": true
+    },
+    {
+      "id": 2,
+      "name": "עוגת גבינה",
+      "description": "קרמית במיוחד עם קרם, שמנת חמוצה, קצפת וניל ופירות העונה",
+      "price": "95₪",
+      "image": "./images/גבינה.jpeg",
+      "inStock": true
+    },
+    {
+      "id": 3,
+      "name": "סינבון קינמון",
+      "description": "רך במיוחד 4 יחידות",
+      "price": "75₪",
+      "image": "./images/סינבון.jpeg",
+      "inStock": true
+    },
+    {
+      "id": 4,
+      "name": "עוגיות שוקולד צ'יפס קריספיות",
+      "description": "6 יחידות",
+      "price": "60₪",
+      "image": "./images/עוגיות.jpeg",
+      "inStock": true
+    },
+    {
+      "id": 5,
+      "name": "אלפחורס",
+      "description": "לא מתפוררות אף פעם - 13 יחידות בקופסא",
+      "price": "70₪ ",
+      "image": "./images/אלפחורס.jpeg",
+      "inStock": true
+    },
+    {
+      "id": 6,
+      "name": "מארז פחזניות קראמבל",
+      "description": "במילוי קרם וניל - 9 יחידות",
+      "price": "90₪",
+      "image": "./images/פחזניות.jpeg",
+      "inStock": true
+    },
+    {
+      "id": 7,
+      "name": "מגולגלות נוטלה וקינדר",
+      "description": "12 יחידות",
+      "price": "70₪",
+      "image": "./images/מגולגלות.jpeg",
+      "inStock": true
+    }
+  ],
+  "id": 2,
+  "name": "עוגת גבינה",
+  "description": "עוגת גבינה קרמית במיוחד עם קרם, שמנת חמוצה, קצפת וניל ופירות העונה",
+  "price": "95₪",
+  "image": "/images/גבינה.jpeg",
+  "inStock": true
 }
