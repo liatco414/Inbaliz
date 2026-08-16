@@ -3,17 +3,35 @@ document.addEventListener("DOMContentLoaded", () => {
     const searchInput = document.getElementById("recipeSearch");
     let allRecipes = [];
 
-    // טעינת המתכונים מתוך ה-JSON
-    fetch("data/recipes/recipes.json")
-        .then((response) => response.json())
-        .then((data) => {
-            allRecipes = data.recipes; 
+    // טעינת כל קבצי ה-JSON מתיקיית המתכונים בגיטהאב
+    async function loadRecipesFolder() {
+        try {
+            // החליפי את שם המשתמש ושם הריפו שלך בגיטהאב כאן למטה!
+            const GITHUB_USER = "YOUR_GITHUB_USERNAME";
+            const REPO_NAME = "YOUR_REPO_NAME";
+
+            const response = await fetch(`https://api.github.com/repos/${GITHUB_USER}/${REPO_NAME}/contents/data/recipes`);
+            if (!response.ok) throw new Error("Could not fetch recipes folder");
+
+            const files = await response.json();
+            const jsonFiles = files.filter(file => file.name.endsWith('.json'));
+            
+            const recipesPromises = jsonFiles.map(file => fetch(file.download_url).then(res => res.json()));
+            return await Promise.all(recipesPromises);
+        } catch (error) {
+            console.error("שגיאה בטעינת המתכונים:", error);
+            return [];
+        }
+    }
+
+    loadRecipesFolder().then((recipes) => {
+        allRecipes = recipes;
         displayRecipes(allRecipes);
-        })
-        .catch((error) => console.error("שגיאה בטעינת המתכונים:", error));
+    });
 
     // פונקציה שמציגה את המתכונים במסך
     function displayRecipes(recipesToDisplay) {
+        if (!recipesGrid) return;
         recipesGrid.innerHTML = "";
 
         if (recipesToDisplay.length === 0) {
@@ -42,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (searchInput) {
         searchInput.addEventListener("input", (e) => {
             const searchTerm = e.target.value.toLowerCase().trim();
-            const filtered = allRecipes.filter((recipe) => recipe.title.toLowerCase().includes(searchTerm));
+            const filtered = allRecipes.filter((recipe) => recipe.title && recipe.title.toLowerCase().includes(searchTerm));
             displayRecipes(filtered);
         });
     }
