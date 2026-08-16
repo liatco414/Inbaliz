@@ -6,27 +6,36 @@ media_folder: "images"
 public_folder: "/images"
 
 collections:
-    - name: "recipes"
-      label: "מתכונים"
-      folder: "data/recipes"
-      create: true
-      format: "json"
-      slug: "{{slug}}"
-      fields:
-          - { label: "שם המתכון", name: "title", widget: "string" }
-          - { label: "תמונה", name: "image", widget: "image" }
-          - { label: "מצרכים", name: "ingredients", widget: "list", field: { label: "מצרך", name: "item", widget: "string" } }
-          - { label: "אופן הכנה", name: "instructions", widget: "text" }
+    - name: "content_manager"
+      label: "ניהול תוכן"
+      files:
+        # כאן אנחנו מגדירים בדיוק איזה קובץ JSON לערוך
+        - file: "data/recipes/recipes.json"
+          label: "מתכונים"
+          name: "recipes"
+          fields:
+            - label: "רשימת מתכונים"
+              name: "recipes"
+              widget: "list"
+              create: true
+              fields:
+                - { label: "מזהה", name: "id", widget: "number" }
+                - { label: "שם המתכון", name: "title", widget: "string" }
+                - { label: "תמונה", name: "image", widget: "image" }
+                - { label: "מצרכים", name: "ingredients", widget: "list", field: { label: "מצרך", name: "item", widget: "string" } }
+                - { label: "אופן הכנה", name: "instructions", widget: "text" }
 
-    - name: "products"
-      label: "מוצרים"
-      folder: "data/products"
-      create: true
-      format: "json"
-      slug: "{{slug}}"
-      fields:
-          - { label: "שם המוצר", name: "name", widget: "string" }
-          - { label: "תיאור", name: "description", widget: "text" }
-          - { label: "מחיר", name: "price", widget: "string" }
-          - { label: "תמונה", name: "image", widget: "image" }
-          - { label: "במלאי", name: "inStock", widget: "boolean" }
+        - file: "data/products/index.json"
+          label: "מוצרים"
+          name: "products"
+          fields:
+            - label: "רשימת מוצרים"
+              name: "bakery_items"
+              widget: "list"
+              fields:
+                - { label: "מזהה", name: "id", widget: "number" }
+                - { label: "שם", name: "name", widget: "string" }
+                - { label: "תיאור", name: "description", widget: "text" }
+                - { label: "מחיר", name: "price", widget: "string" }
+                - { label: "תמונה", name: "image", widget: "image" }
+                - { label: "במלאי", name: "inStock", widget: "boolean" }
