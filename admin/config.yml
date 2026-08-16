@@ -9,34 +9,26 @@ collections:
   - name: "recipes"
     label: "מתכונים"
     folder: "data/recipes"
-    create: false
+    create: true
     format: "json"
-    file: "data/recipes/recipes.json"
+    slug: "{{slug}}"
     fields:
-      - label: "רשימת מתכונים"
-        name: "recipes"
-        widget: "list"
-        fields:
-          - { label: "מזהה", name: "id", widget: "number" }
-          - { label: "שם", name: "title", widget: "string" }
-          - { label: "תמונה", name: "image", widget: "image" }
-          - { label: "מצרכים", name: "ingredients", widget: "list", field: { label: "מצרך", name: "item", widget: "string" } }
-          - { label: "הכנה", name: "instructions", widget: "text" }
+      - { label: "מזהה", name: "id", widget: "number" }
+      - { label: "שם", name: "title", widget: "string" }
+      - { label: "תמונה", name: "image", widget: "image" }
+      - { label: "מצרכים", name: "ingredients", widget: "list", field: { label: "מצרך", name: "item", widget: "string" } }
+      - { label: "אופן הכנה", name: "instructions", widget: "text" }
 
   - name: "products"
     label: "מוצרים"
     folder: "data/products"
-    create: false
+    create: true
     format: "json"
-    file: "data/products/index.json"
+    slug: "{{slug}}"
     fields:
-      - label: "רשימת מוצרים"
-        name: "bakery_items"
-        widget: "list"
-        fields:
-          - { label: "מזהה", name: "id", widget: "number" }
-          - { label: "שם המוצר", name: "name", widget: "string" }
-          - { label: "תיאור", name: "description", widget: "text" }
-          - { label: "מחיר", name: "price", widget: "string" }
-          - { label: "תמונה", name: "image", widget: "image" }
-          - { label: "במלאי", name: "inStock", widget: "boolean" }
+      - { label: "מזהה", name: "id", widget: "number" }
+      - { label: "שם המוצר", name: "name", widget: "string" }
+      - { label: "תיאור", name: "description", widget: "text" }
+      - { label: "מחיר", name: "price", widget: "string" }
+      - { label: "תמונה", name: "image", widget: "image" }
+      - { label: "במלאי", name: "inStock", widget: "boolean" }
