@@ -15,8 +15,8 @@ document.addEventListener("DOMContentLoaded", () => {
     async function loadProductsFolder() {
         try {
             // החליפי את שם המשתמש ושם הריפו שלך בגיטהאב כאן למטה!
-            const GITHUB_USER = "YOUR_GITHUB_USERNAME";
-            const REPO_NAME = "YOUR_REPO_NAME";
+            const GITHUB_USER = "liatco414";
+            const REPO_NAME = "Inbaliz";
 
             const response = await fetch(`https://api.github.com/repos/${GITHUB_USER}/${REPO_NAME}/contents/data/products`);
             if (!response.ok) throw new Error("Could not fetch products folder");
