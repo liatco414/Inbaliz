@@ -7,8 +7,8 @@ document.addEventListener("DOMContentLoaded", () => {
     fetch("data/recipes/recipes.json")
         .then((response) => response.json())
         .then((data) => {
-            allRecipes = data;
-            displayRecipes(allRecipes);
+            allRecipes = data.recipes; 
+        displayRecipes(allRecipes);
         })
         .catch((error) => console.error("שגיאה בטעינת המתכונים:", error));
 
