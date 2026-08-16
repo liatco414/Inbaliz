@@ -6,16 +6,22 @@ media_folder: "images"
 public_folder: "/images"
 
 collections:
-    - name: "recipes"
-      label: "מתכונים"
-      folder: "data/recipes"
-      create: true
-      slug: "{{slug}}"
-      fields:
-          - { label: "שם המתכון", name: "title", widget: "string" }
-          - { label: "תמונה", name: "image", widget: "image" }
-          - { label: "מצרכים", name: "ingredients", widget: "list" }
-          - { label: "אופן הכנה", name: "instructions", widget: "text" }
+    - name: "recipes_file"
+      label: "ניהול מתכונים"
+      files:
+          - file: "data/recipes/recipes.json"
+            label: "רשימת המתכונים"
+            name: "recipes"
+            fields:
+                - label: "רשימת המתכונים"
+                  name: "bakery_items" # או recipes תלוי איך תרצי, נשמור על מבנה מערך
+                  widget: "list"
+                  fields:
+                      - { label: "מזהה (ID)", name: "id", widget: "number" }
+                      - { label: "שם המתכון", name: "title", widget: "string" }
+                      - { label: "תמונה", name: "image", widget: "image" }
+                      - { label: "מצרכים", name: "ingredients", widget: "list", field: { label: "מצרך", name: "item", widget: "string" } }
+                      - { label: "אופן הכנה", name: "instructions", widget: "text" }
 
     - name: "products"
       label: "מוצרים"
