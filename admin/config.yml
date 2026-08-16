@@ -10,6 +10,7 @@ collections:
       label: "מתכונים"
       folder: "data/recipes"
       create: true
+      format: "json"
       slug: "{{slug}}"
       fields:
           - { label: "שם המתכון", name: "title", widget: "string" }
@@ -21,6 +22,7 @@ collections:
       label: "מוצרים"
       folder: "data/products"
       create: true
+      format: "json"
       slug: "{{slug}}"
       fields:
           - { label: "שם המוצר", name: "name", widget: "string" }
