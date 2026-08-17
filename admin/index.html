@@ -18,7 +18,7 @@
             padding: 20px;
         }
         .admin-container {
-            max-width: 650px;
+            max-width: 750px;
             margin: 40px auto;
             background: #fff;
             padding: 30px;
@@ -35,6 +35,7 @@
             justify-content: center;
             margin-bottom: 25px;
             gap: 10px;
+            flex-wrap: wrap;
         }
         .tab-btn {
             padding: 10px 20px;
@@ -134,9 +135,69 @@
         button.submit-btn:hover {
             background: #27ae60;
         }
+        button.cancel-edit-btn {
+            width: 100%;
+            padding: 8px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            cursor: pointer;
+            margin-top: 8px;
+            display: none;
+        }
         #status-message {
             margin-top: 15px;
             text-align: center;
+            font-weight: 600;
+        }
+        .items-list {
+            margin-top: 20px;
+            border-top: 2px solid #eee;
+            padding-top: 20px;
+        }
+        .item-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f9f9f9;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #e5e5e5;
+        }
+        .item-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .item-info img {
+            width: 45px;
+            height: 45px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+        .item-actions {
+            display: flex;
+            gap: 8px;
+        }
+        .edit-item-btn {
+            background: #f39c12;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .delete-item-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 5px;
+            cursor: pointer;
             font-weight: 600;
         }
     </style>
@@ -147,13 +208,18 @@
         <h1>ניהול מוצרים ומתכונים</h1>
         
         <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('products')">הוספת מוצר</button>
-            <button class="tab-btn" onclick="switchTab('recipes')">הוספת מתכון</button>
+            <button class="tab-btn active" onclick="switchTab('products')">הוספת/ניהול מוצרים</button>
+            <button class="tab-btn" onclick="switchTab('recipes')">הוספת/ניהול מתכונים</button>
         </div>
 
         <!-- טופס מוצרים -->
         <div id="products-section" class="form-section active">
+            <h3 id="product-form-title" style="margin-bottom: 15px; color: #34495e;">הוספת מוצר חדש</h3>
             <form id="product-form" onsubmit="saveItem(event, 'products')">
+                <input type="hidden" id="prod-edit-filename">
+                <input type="hidden" id="prod-edit-sha">
+                <input type="hidden" id="prod-existing-img">
+                
                 <div class="form-group">
                     <label>שם המוצר</label>
                     <input type="text" id="prod-name" required>
@@ -167,31 +233,38 @@
                     <input type="text" id="prod-price" required>
                 </div>
                 <div class="form-group">
-                    <label>העלאת תמונה</label>
-                    <input type="file" id="prod-img" accept="image/*" required>
+                    <label>העלאת תמונה (השאר ריק אם אין צורך לשנות בעריכה)</label>
+                    <input type="file" id="prod-img" accept="image/*">
                 </div>
                 <div class="form-group checkbox-group">
                     <input type="checkbox" id="prod-stock" checked>
                     <label for="prod-stock">במלאי</label>
                 </div>
-                <button type="submit" class="submit-btn">שמור מוצר</button>
+                <button type="submit" id="prod-submit-btn" class="submit-btn">שמור מוצר</button>
+                <button type="button" id="prod-cancel-btn" class="cancel-edit-btn" onclick="cancelEdit('products')">ביטול עריכה</button>
             </form>
+
+            <div class="items-list">
+                <h4 style="margin-bottom: 10px;">מוצרים קיימים במערכת:</h4>
+                <div id="products-list-container">טוען מוצרים...</div>
+            </div>
         </div>
 
         <!-- טופס מתכונים -->
         <div id="recipes-section" class="form-section">
+            <h3 id="recipe-form-title" style="margin-bottom: 15px; color: #34495e;">הוספת מתכון חדש</h3>
             <form id="recipe-form" onsubmit="saveItem(event, 'recipes')">
-                <div class="form-group">
-                    <label>מזהה (מספר סידורי ייחודי, למשל: 1, 2...)</label>
-                    <input type="number" id="rec-id" required>
-                </div>
+                <input type="hidden" id="rec-edit-filename">
+                <input type="hidden" id="rec-edit-sha">
+                <input type="hidden" id="rec-existing-img">
+
                 <div class="form-group">
                     <label>שם המתכון</label>
                     <input type="text" id="rec-title" required>
                 </div>
                 <div class="form-group">
-                    <label>העלאת תמונה</label>
-                    <input type="file" id="rec-img" accept="image/*" required>
+                    <label>העלאת תמונה (השאר ריק אם אין צורך לשנות בעריכה)</label>
+                    <input type="file" id="rec-img" accept="image/*">
                 </div>
                 <div class="form-group">
                     <label>מצרכים</label>
@@ -206,8 +279,14 @@
                     <label>אופן הכנה</label>
                     <textarea id="rec-instructions" required></textarea>
                 </div>
-                <button type="submit" class="submit-btn">שמור מתכון</button>
+                <button type="submit" id="rec-submit-btn" class="submit-btn">שמור מתכון</button>
+                <button type="button" id="rec-cancel-btn" class="cancel-edit-btn" onclick="cancelEdit('recipes')">ביטול עריכה</button>
             </form>
+
+            <div class="items-list">
+                <h4 style="margin-bottom: 10px;">מתכונים קיימים במערכת:</h4>
+                <div id="recipes-list-container">טוען מתכונים...</div>
+            </div>
         </div>
 
         <div id="status-message"></div>
@@ -218,6 +297,12 @@
         const REPO_OWNER = "YOUR_GITHUB_USERNAME";
         const REPO_NAME = "YOUR_REPO_NAME";
         const BRANCH = "main";
+
+        // טעינת רשימות בעלייה
+        window.onload = () => {
+            loadItemsList('products');
+            loadItemsList('recipes');
+        };
 
         function switchTab(tab) {
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -232,9 +317,58 @@
             }
         }
 
-        // ניהול שורות מצרכים דינמיות עם כפתור + ו- - צמודים
-        function addIngredientRow(button) {
-            // הופכים את הכפתור הנוכחי למינוס (-) כדי שיה אפשר למחוק את השורה הזו
+        // טעינת רשימת פריטים מגיטהאב
+        async function loadItemsList(type) {
+            const containerId = type === 'products' ? 'products-list-container' : 'recipes-list-container';
+            const container = document.getElementById(containerId);
+            const folderPath = `data/${type}`;
+
+            try {
+                const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${folderPath}`, {
+                    headers: { "Authorization": `token ${GITHUB_TOKEN}` }
+                });
+
+                if (!response.ok) {
+                    container.innerHTML = "אין פריטים קיימים או תיקייה ריקה.";
+                    return;
+                }
+
+                const files = await response.json();
+                const jsonFiles = files.filter(f => f.name.endsWith('.json'));
+
+                if (jsonFiles.length === 0) {
+                    container.innerHTML = "אין פריטים עדיין.";
+                    return;
+                }
+
+                container.innerHTML = "";
+                for (let file of jsonFiles) {
+                    const fileContentRes = await fetch(file.download_url);
+                    const data = await fileContentRes.json();
+                    const itemName = type === 'products' ? data.name : data.title;
+                    const itemImg = data.image ? data.image.replace('./', '') : '';
+
+                    const card = document.createElement("div");
+                    card.className = "item-card";
+                    card.innerHTML = `
+                        <div class="item-info">
+                            ${itemImg ? `<img src="../${itemImg}" onerror="this.src='https://via.placeholder.com/45'">` : ''}
+                            <span><strong>${itemName}</strong></span>
+                        </div>
+                        <div class="item-actions">
+                            <button class="item-btn edit-item-btn" onclick='prepareEdit("${type}", ${JSON.stringify(file.name)}, ${JSON.stringify(file.sha)})'>עריכה</button>
+                            <button class="item-btn delete-item-btn" onclick='deleteItem("${type}", ${JSON.stringify(file.name)}, ${JSON.stringify(file.sha)}, ${JSON.stringify(data.image)})'>מחיקה</button>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                }
+            } catch (err) {
+                container.innerHTML = "שגיאה בטעינת הרשימה.";
+            }
+        }
+
+        // ניהול שורות מצרכים
+        function addIngredientRow(button, value = "") {
             button.className = "action-btn remove";
             button.textContent = "-";
             button.setAttribute("onclick", "removeIngredientRow(this)");
@@ -243,7 +377,7 @@
             const newRow = document.createElement("div");
             newRow.className = "ingredient-row";
             newRow.innerHTML = `
-                <input type="text" class="ingredient-input" placeholder="הכנס מצרך נוסף">
+                <input type="text" class="ingredient-input" value="${value}" placeholder="הכנס מצרך נוסף">
                 <button type="button" class="action-btn add" onclick="addIngredientRow(this)" title="הוסף שורה">+</button>
             `;
             container.appendChild(newRow);
@@ -284,74 +418,208 @@
                 })
             });
 
-            if (!response.ok) {
-                throw new Error("Failed to upload image to GitHub");
-            }
-
+            if (!response.ok) throw new Error("Failed to upload image");
             return imagePath;
         }
 
+        // הכנה לעריכת פריט קיים
+        async function prepareEdit(type, fileName, sha) {
+            const statusDiv = "טוען נתונים לעריכה...";
+            const folderPath = `data/${type}/${fileName}`;
+            
+            const res = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${folderPath}`, {
+                headers: { "Authorization": `token ${GITHUB_TOKEN}` }
+            });
+            const fileDataJson = await res.json();
+            const content = JSON.parse(decodeURIComponent(escape(atob(fileDataJson.content))));
+
+            if (type === 'products') {
+                document.getElementById('prod-edit-filename').value = fileName;
+                document.getElementById('prod-edit-sha').value = sha;
+                document.getElementById('prod-existing-img').value = content.image;
+                document.getElementById('prod-name').value = content.name;
+                document.getElementById('prod-desc').value = content.description;
+                document.getElementById('prod-price').value = content.price;
+                document.getElementById('prod-stock').checked = content.inStock;
+
+                document.getElementById('product-form-title').textContent = "עריכת מוצר קיים";
+                document.getElementById('prod-submit-btn').textContent = "עדכן מוצר";
+                document.getElementById('prod-cancel-btn').style.display = "block";
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                document.getElementById('rec-edit-filename').value = fileName;
+                document.getElementById('rec-edit-sha').value = sha;
+                document.getElementById('rec-existing-img').value = content.image;
+                document.getElementById('rec-title').value = content.title;
+                document.getElementById('rec-instructions').value = content.instructions;
+
+                // טעינת מצרכים
+                const container = document.getElementById("ingredients-container");
+                container.innerHTML = "";
+                if (content.ingredients && content.ingredients.length > 0) {
+                    content.ingredients.forEach((ing, index) => {
+                        const row = document.createElement("div");
+                        row.className = "ingredient-row";
+                        const isLast = index === content.ingredients.length - 1;
+                        row.innerHTML = `
+                            <input type="text" class="ingredient-input" value="${ing}" placeholder="הכנס מצרך">
+                            <button type="button" class="action-btn ${isLast ? 'add' : 'remove'}" onclick="${isLast ? 'addIngredientRow(this)' : 'removeIngredientRow(this)'}" title="${isLast ? 'הוסף שורה' : 'מחק'}">${isLast ? '+' : '-'}</button>
+                        `;
+                        container.appendChild(row);
+                    });
+                }
+
+                document.getElementById('recipe-form-title').textContent = "עריכת מתכון קיים";
+                document.getElementById('rec-submit-btn').textContent = "עדכן מתכון";
+                document.getElementById('rec-cancel-btn').style.display = "block";
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function cancelEdit(type) {
+            if (type === 'products') {
+                document.getElementById('product-form').reset();
+                document.getElementById('prod-edit-filename').value = "";
+                document.getElementById('prod-edit-sha').value = "";
+                document.getElementById('product-form-title').textContent = "הוספת מוצר חדש";
+                document.getElementById('prod-submit-btn').textContent = "שמור מוצר";
+                document.getElementById('prod-cancel-btn').style.display = "none";
+            } else {
+                document.getElementById('recipe-form').reset();
+                document.getElementById('rec-edit-filename').value = "";
+                document.getElementById('rec-edit-sha').value = "";
+                document.getElementById('recipe-form-title').textContent = "הוספת מתכון חדש";
+                document.getElementById('rec-submit-btn').textContent = "שמור מתכון";
+                document.getElementById('rec-cancel-btn').style.display = "none";
+                document.getElementById("ingredients-container").innerHTML = `
+                    <div class="ingredient-row">
+                        <input type="text" class="ingredient-input" placeholder="לדוגמה: 500 מ&quot;ל שמנת מתוקה" required>
+                        <button type="button" class="action-btn add" onclick="addIngredientRow(this)" title="הוסף שורה">+</button>
+                    </div>
+                `;
+            }
+        }
+
+        // מחיקת פריט
+        async function deleteItem(type, fileName, sha, imagePath) {
+            if (!confirm("האם את בטוחה שאת רוצה למחוק את הפריט לצמיתות?")) return;
+            const statusDiv = document.getElementById("status-message");
+            statusDiv.style.color = "#333";
+            statusDiv.textContent = "מוחק פריט...";
+
+            try {
+                // מחיקת קובץ ה-JSON
+                await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/data/${type}/${fileName}`, {
+                    method: "DELETE",
+                    headers: {
+                        "Authorization": `token ${GITHUB_TOKEN}`,
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ message: `Delete ${fileName}`, sha: sha, branch: BRANCH })
+                });
+
+                // מחיקת תמונה קשורה אם קיימת
+                if (imagePath) {
+                    const cleanImgPath = imagePath.replace('./', '');
+                    const imgRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${cleanImgPath}`, {
+                        headers: { "Authorization": `token ${GITHUB_TOKEN}` }
+                    });
+                    if (imgRes.ok) {
+                        const imgData = await imgRes.json();
+                        await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${cleanImgPath}`, {
+                            method: "DELETE",
+                            headers: {
+                                "Authorization": `token ${GITHUB_TOKEN}`,
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({ message: `Delete image for ${fileName}`, sha: imgData.sha, branch: BRANCH })
+                        });
+                    }
+                }
+
+                statusDiv.style.color = "green";
+                statusDiv.textContent = "הפריט נמחק בהצלחה!";
+                loadItemsList(type);
+            } catch (err) {
+                statusDiv.style.color = "red";
+                statusDiv.textContent = "שגיאה במחיקה: " + err.message;
+            }
+        }
+
+        // שמירה או עדכון פריט
         async function saveItem(event, type) {
             event.preventDefault();
             const statusDiv = document.getElementById("status-message");
             statusDiv.style.color = "#333";
-            statusDiv.textContent = "מעלה תמונה ושומר נתונים ל-GitHub...";
+            statusDiv.textContent = "מעבד נתונים ושומר ל-GitHub...";
 
             try {
-                const imagePath = await uploadImageToGitHub(type === 'products' ? 'prod-img' : 'rec-img');
+                const fileInputId = type === 'products' ? 'prod-img' : 'rec-img';
+                let imagePath = await uploadImageToGitHub(fileInputId);
                 
-                let fileName, fileData, folderPath;
-                const uniqueId = Date.now();
+                const existingImg = document.getElementById(type === 'products' ? 'prod-existing-img' : 'rec-existing-img').value;
+                if (!imagePath) {
+                    imagePath = existingImg || "";
+                } else {
+                    imagePath = `./${imagePath}`;
+                }
+
+                let fileName = document.getElementById(type === 'products' ? 'prod-edit-filename' : 'rec-edit-filename').value;
+                let sha = document.getElementById(type === 'products' ? 'prod-edit-sha' : 'rec-edit-sha').value;
+                
+                const isEditing = fileName !== "";
+                if (!isEditing) {
+                    fileName = `${type === 'products' ? 'product' : 'recipe'}-${Date.now()}.json`;
+                }
+
+                const folderPath = `data/${type}/${fileName}`;
+                let fileData = {};
 
                 if (type === 'products') {
-                    const name = document.getElementById("prod-name").value;
-                    const description = document.getElementById("prod-desc").value;
-                    const price = document.getElementById("prod-price").value;
-                    const inStock = document.getElementById("prod-stock").checked;
-
-                    fileName = `product-${uniqueId}.json`;
-                    folderPath = `data/products/${fileName}`;
-                    fileData = { name, description, price, image: `./${imagePath}`, inStock };
+                    fileData = {
+                        name: document.getElementById("prod-name").value,
+                        description: document.getElementById("prod-desc").value,
+                        price: document.getElementById("prod-price").value,
+                        image: imagePath,
+                        inStock: document.getElementById("prod-stock").checked
+                    };
                 } else {
-                    const id = Number(document.getElementById("rec-id").value);
-                    const title = document.getElementById("rec-title").value;
-                    const instructions = document.getElementById("rec-instructions").value;
-
-                    // איסוף כל שורות המצרכים למערך מחרוזות נקי
                     const ingredientInputs = document.querySelectorAll(".ingredient-input");
                     const ingredients = Array.from(ingredientInputs).map(input => input.value.trim()).filter(val => val !== "");
 
-                    fileName = `recipe-${uniqueId}.json`;
-                    folderPath = `data/recipes/${fileName}`;
-                    fileData = { id, title, image: `./${imagePath}`, ingredients, instructions };
+                    fileData = {
+                        title: document.getElementById("rec-title").value,
+                        image: imagePath,
+                        ingredients: ingredients,
+                        instructions: document.getElementById("rec-instructions").value
+                    };
                 }
 
                 const contentEncoded = btoa(unescape(encodeURIComponent(JSON.stringify(fileData, null, 2))));
+                
+                let bodyPayload = {
+                    message: `${isEditing ? 'Update' : 'Add'} ${type} via custom admin panel`,
+                    content: contentEncoded,
+                    branch: BRANCH
+                };
+                if (isEditing && sha) {
+                    bodyPayload.sha = sha;
+                }
 
-                const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${folderPath}`,{
+                const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${folderPath}`, {
                     method: "PUT",
                     headers: {
                         "Authorization": `token ${GITHUB_TOKEN}`,
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({
-                        message: `Add new ${type} and image via custom admin panel`,
-                        content: contentEncoded,
-                        branch: BRANCH
-                    })
+                    body: JSON.stringify(bodyPayload)
                 });
 
                 if (response.ok) {
                     statusDiv.style.color = "green";
-                    statusDiv.textContent = "הפריט והתמונה הועלו בהצלחה ונשמרו ב-GitHub! ✨";
-                    event.target.reset();
-                    // איפוס שורות המצרכים למצרך בודד התחלתי עם כפתור +
-                    document.getElementById("ingredients-container").innerHTML = `
-                        <div class="ingredient-row">
-                            <input type="text" class="ingredient-input" placeholder="לדוגמה: 500 מ&quot;ל שמנת מתוקה" required>
-                            <button type="button" class="action-btn add" onclick="addIngredientRow(this)" title="הוסף שורה">+</button>
-                        </div>
-                    `;
+                    statusDiv.textContent = isEditing ? "הפריט עודכן בהצלחה! ✨" : "הפריט נוסף בהצלחה! ✨";
+                    cancelEdit(type);
+                    loadItemsList(type);
                 } else {
                     const err = await response.json();
                     throw new Error(err.message || "Unknown error");
