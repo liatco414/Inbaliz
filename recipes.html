@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Inbali'z | מתכונים מהמטבח</title>
+        <link rel="stylesheet" href="recipes.css" />
+        <link rel="stylesheet" href="style.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    </head>
+    <body>
+        <!-- תפריט ניווט עליון -->
+        <nav class="navbar">
+            <div class="nav-brand">
+                <a href="#hero"><img src="./images/natural-sticker.png" alt="Logo" class="nav-logo" /></a>
+            </div>
+
+            <!-- כפתור ההמבורגר -->
+            <button class="hamburger" id="hamburger" aria-label="תפריט ניווט">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <!-- הקישורים -->
+            <div class="nav-links" id="navLinks">
+                <a href="index.html">ראשי</a>
+                <a href="#menu">תפריט</a>
+                <a href="recipes.html">מתכונים</a>
+                <a href="#contact">צור קשר</a>
+            </div>
+        </nav>
+
+        <!-- תוכן ראשי: מתכונים וחיפוש -->
+        <main class="recipes-page">
+            <div class="container">
+                <h1 class="section-title">מהמטבח שלי</h1>
+                <p class="recipes-subtitle">כל הסודות, הטיפים והמתכונים המתוקים שלי ישירות אלייך</p>
+
+                <!-- שדה חיפוש מתכונים -->
+                <div class="search-container">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="recipeSearch" placeholder="חיפוש מתכון לפי שם..." />
+                </div>
+
+                <!-- רשת המתכונים -->
+                <div id="recipesGrid" class="recipes-grid">
+                    <!-- נטען דינמית מ-recipes.js -->
+                </div>
+            </div>
+        </main>
+
+        <!-- פוטר -->
+        <footer class="main-footer">
+            <div class="footer-content">
+                <div class="footer-bottom">
+                    <p>יוצרת האתר ליאת | liatco109@gmail.com <i class="fa-regular fa-envelope"></i></p>
+                </div>
+            </div>
+        </footer>
+
+        <script src="recipes.js"></script>
+    </body>
+</html>
