@@ -659,47 +659,52 @@
             }
 
             function convertFileToBase64(file) {
-                return new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.readAsDataURL(file);
-                    reader.onload = (event) => {
-                        const img = new Image();
-                        img.src = event.target.result;
-                        img.onload = () => {
-                            const canvas = document.createElement("canvas");
-                            // הקטנו את המקסימום ל-250 פיקסלים
-                            const MAX_WIDTH = 300;
-                            const MAX_HEIGHT = 300;
-                            let width = img.width;
-                            let height = img.height;
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (event) => {
+            const img = new Image();
+            img.src = event.target.result;
+            img.onload = () => {
+                const canvas = document.createElement("canvas");
 
-                            if (width > height) {
-                                if (width > MAX_WIDTH) {
-                                    height *= MAX_WIDTH / width;
-                                    width = MAX_WIDTH;
-                                }
-                            } else {
-                                if (height > MAX_HEIGHT) {
-                                    width *= MAX_HEIGHT / height;
-                                    height = MAX_HEIGHT;
-                                }
-                            }
+                // נשארים בבטחה על 400 פיקסלים כדי שהשרת של גוגל לא יחנק לעולם
+                const MAX_WIDTH = 400;
+                const MAX_HEIGHT = 400;
+                let width = img.width;
+                let height = img.height;
 
-                            canvas.width = width;
-                            canvas.height = height;
-                            const ctx = canvas.getContext("2d");
-                            ctx.drawImage(img, 0, 0, width, height);
+                if (width > height) {
+                    if (width > MAX_WIDTH) {
+                        height *= MAX_WIDTH / width;
+                        width = MAX_WIDTH;
+                    }
+                } else {
+                    if (height > MAX_HEIGHT) {
+                        width *= MAX_HEIGHT / height;
+                        height = MAX_HEIGHT;
+                    }
+                }
 
-                            // הורדנו איכות ל-0.5
-                            const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.5);
-                            console.log("גודל התמונה החדש (אחרי דחיסה בתווים):", compressedDataUrl.length);
-                            resolve(compressedDataUrl);
-                        };
-                        img.onerror = (error) => reject(error);
-                    };
-                    reader.onerror = (error) => reject(error);
-                });
-            }
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext("2d");
+
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = "high";
+                ctx.drawImage(img, 0, 0, width, height);
+
+                // JPEG באיכות 0.7 על 400 פיקסלים – שומר על גודל קטן ובטוח, אבל נותן חדות טובה יותר מקודמו
+                const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.7);
+
+                console.log("גודל תמונה בטוח ומקסימלי (בתווים):", compressedDataUrl.length);
+                resolve(compressedDataUrl);
+            };
+            img.onerror = (error) => reject(error);
+        };
+        reader.onerror = (error) => reject(error);
+    });
+}
 
             async function saveItem(event, type) {
                 event.preventDefault();
