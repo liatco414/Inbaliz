@@ -480,45 +480,48 @@
             }
 
             async function loadItemsList(type) {
-                const containerId = type === "products" ? "products-list-container" : "recipes-list-container";
-                const container = document.getElementById(containerId);
+    // type יכול להיות "products" או "recipes"
+    const isRecipes = (type === "recipes" || type === "recipe");
+    const serverType = isRecipes ? "recipe" : "product";
+    
+    const containerId = isRecipes ? "recipes-list-container" : "products-list-container";
+    const container = document.getElementById(containerId);
+    if (!container) return;
 
-                try {
-                    const response = await fetch(`${GOOGLE_WEB_APP_URL}?type=${type === "recipes" ? "recipe" : "product"}&t=${Date.now()}`);
-                    const result = await response.json();
+    try {
+        const response = await fetch(`${GOOGLE_WEB_APP_URL}?type=${serverType}&t=${Date.now()}`);
+        const result = await response.json();
 
-                    // חילוץ המערך מתוך התשובה של השרת (תמיכה גם במבנה החדש עם data וגם בישן אם יש)
-                    const items = Array.isArray(result) ? result : result.data || [];
+        const items = Array.isArray(result) ? result : result.data || [];
+        currentItemsCache[type] = items;
 
-                    currentItemsCache[type] = items;
+        if (!items || items.length === 0) {
+            container.innerHTML = "אין פריטים עדיין.";
+            return;
+        }
 
-                    if (!items || items.length === 0) {
-                        container.innerHTML = "אין פריטים עדיין.";
-                        return;
-                    }
-
-                    container.innerHTML = "";
-                    items.forEach((item) => {
-                        const itemName = type === "products" ? item.name : item.title;
-                        const card = document.createElement("div");
-                        card.className = "item-card";
-                        card.innerHTML = `
-            <div class="item-info">
-                ${item.image ? `<img src="${item.image}" onerror="this.src='https://via.placeholder.com/45'">` : ""}
-                <span><strong>${itemName}</strong></span>
-            </div>
-            <div class="item-actions">
-                <button class="edit-item-btn" type="button" onclick='prepareEditById("${type}", "${item.id}")'>עריכה</button>
-                <button class="delete-item-btn" type="button" onclick='deleteItem("${type}", "${item.id}")'>מחיקה</button>
-            </div>
-        `;
-                        container.appendChild(card);
-                    });
-                } catch (err) {
-                    console.error("שגיאה בטעינת הרשימה:", err);
-                    container.innerHTML = "שגיאה בטעינת הרשימה.";
-                }
-            }
+        container.innerHTML = "";
+        items.forEach((item) => {
+            const itemName = isRecipes ? item.title : item.name;
+            const card = document.createElement("div");
+            card.className = "item-card";
+            card.innerHTML = `
+                <div class="item-info">
+                    ${item.image ? `<img src="${item.image}" onerror="this.src='https://via.placeholder.com/45'">` : ""}
+                    <span><strong>${itemName}</strong></span>
+                </div>
+                <div class="item-actions">
+                    <button class="edit-item-btn" type="button" onclick='prepareEditById("${type}", "${item.id}")'>עריכה</button>
+                    <button class="delete-item-btn" type="button" onclick='deleteItem("${type}", "${item.id}")'>מחיקה</button>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    } catch (err) {
+        console.error("שגיאה בטעינת הרשימה:", err);
+        container.innerHTML = "שגיאה בטעינת הרשימה.";
+    }
+}
 
             function prepareEditById(type, id) {
                 const item = currentItemsCache[type].find((i) => String(i.id) === String(id));
